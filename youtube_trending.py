@@ -55,8 +55,6 @@ for video in videos:
 df = pd.DataFrame(videoList)
 print(df)
 
-driver.implicitly_wait(20)
-
 time.sleep(5)
 
 
