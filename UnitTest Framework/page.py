@@ -1,5 +1,10 @@
 from element import BasePageElement
 from locators import MainPageLocators
+from selenium import webdriver
+from selenium.webdriver.common.by import By 
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 class SearchTextElement(BasePageElement):
     """This class gets the search text from the specified locator"""
@@ -23,21 +28,25 @@ class MainPage(BasePage):
     search_text_element = SearchTextElement()
 
     def is_title_matches(self):
-        """Verifies that the hardcoded text "Python" appears in page title"""
+        #Verify "Swag Labs" is in the title
+        return "Swag Labs" in self.driver.title
+       
 
-        return "Python" in self.driver.title
+    def click_login_button(self):
+        login_button = self.driver.find_element(*MainPageLocators.Login_Button)
+        login_button.click()    
+    
+    def login_credentials_pass(self):
+        enter_username = self.driver.find_element(By.XPATH, '//*[@id="user-name"]')
+        enter_username.send_keys("standard_user")
+        
+        enter_password = self.driver.find_element(By.XPATH, '//*[@id="password"]')
+        enter_password.send_keys("secret_sauce" + Keys.ENTER)
+        redirect_url = self.driver.current_url
+        print("Redirected to " + redirect_url)
+        login_url = "https://www.saucedemo.com/inventory.html"
+        if redirect_url == login_url:
+                return True
+        else: 
+                return False
 
-    def click_go_button(self):
-        """Triggers the search"""
-
-        element = self.driver.find_element(*MainPageLocators.GO_BUTTON)
-        element.click()
-
-
-class SearchResultsPage(BasePage):
-    """Search results page action methods come here"""
-
-    def is_results_found(self):
-        # Probably should search for this text in the specific page
-        # element, but as for now it works fine
-        return "No results found." not in self.driver.page_source
